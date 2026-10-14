@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 [Serializable]
 public class UserAccount
@@ -46,6 +48,7 @@ public class UserAccountData
 /// </summary>
 public class UserAccountManager : MonoBehaviour
 {
+    public const string FIREBASE_DB_URL = "https://ragebaitdb-default-rtdb.firebaseio.com";
     private const string PREFS_KEY = "RAGEBAIT_USER_ACCOUNTS";
     private static UserAccountManager instance;
 
@@ -157,6 +160,10 @@ public class UserAccountManager : MonoBehaviour
         }
 
         SaveData();
+        if (ActiveAccount != null)
+        {
+            StartCoroutine(SyncFromCloudCoroutine(ActiveAccount.username));
+        }
     }
 
     public void ReloadData()
@@ -187,6 +194,12 @@ public class UserAccountManager : MonoBehaviour
             PlayerPrefs.Save();
 
             Debug.Log($"[UserAccountManager] DB saved ({data.accounts.Count} accounts) at: {dbPath}");
+
+            // 3. Mirror in Firebase Realtime Database
+            if (ActiveAccount != null)
+            {
+                StartCoroutine(SyncToCloudCoroutine(ActiveAccount));
+            }
         }
         catch (Exception ex)
         {
@@ -344,4 +357,105 @@ public class UserAccountManager : MonoBehaviour
         ActiveAccount.totalWins++;
         SaveData();
     }
+
+    #region Firebase Cloud Sync
+
+    private static string SanitizeFirebaseKey(string key)
+    {
+        if (string.IsNullOrEmpty(key)) return "unknown";
+        return key.Replace(".", "_").Replace("#", "_").Replace("$", "_").Replace("[", "_").Replace("]", "_").Replace("/", "_");
+    }
+
+    private IEnumerator SyncFromCloudCoroutine(string username)
+    {
+        if (string.IsNullOrEmpty(username)) yield break;
+        string safeKey = SanitizeFirebaseKey(username);
+        string url = $"{FIREBASE_DB_URL}/accounts/{safeKey}.json";
+
+        using (UnityWebRequest req = UnityWebRequest.Get(url))
+        {
+            req.timeout = 5;
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                string json = req.downloadHandler.text;
+                if (!string.IsNullOrEmpty(json) && json != "null")
+                {
+                    try
+                    {
+                        UserAccount cloudAcc = JsonUtility.FromJson<UserAccount>(json);
+                        if (cloudAcc != null && !string.IsNullOrEmpty(cloudAcc.username))
+                        {
+                            UserAccount localAcc = data.accounts.Find(a => a.username.Equals(cloudAcc.username, StringComparison.OrdinalIgnoreCase));
+                            if (localAcc != null)
+                            {
+                                localAcc.maxUnlockedLevel = Mathf.Max(localAcc.maxUnlockedLevel, cloudAcc.maxUnlockedLevel);
+                                localAcc.totalScore = Mathf.Max(localAcc.totalScore, cloudAcc.totalScore);
+                                localAcc.totalDeaths = Mathf.Max(localAcc.totalDeaths, cloudAcc.totalDeaths);
+                                localAcc.totalWins = Mathf.Max(localAcc.totalWins, cloudAcc.totalWins);
+                                localAcc.completedAllLevels = localAcc.completedAllLevels || cloudAcc.completedAllLevels;
+                                if (string.IsNullOrEmpty(localAcc.email) && !string.IsNullOrEmpty(cloudAcc.email))
+                                    localAcc.email = cloudAcc.email;
+                                if (string.IsNullOrEmpty(localAcc.password) && !string.IsNullOrEmpty(cloudAcc.password))
+                                    localAcc.password = cloudAcc.password;
+                            }
+                            else
+                            {
+                                data.accounts.Add(cloudAcc);
+                            }
+
+                            // Re-save local mirror
+                            string localJson = JsonUtility.ToJson(data, true);
+                            try
+                            {
+                                System.IO.File.WriteAllText(DatabaseFilePath, localJson);
+                                PlayerPrefs.SetString(PREFS_KEY, localJson);
+                                PlayerPrefs.Save();
+                            }
+                            catch { }
+
+                            OnAccountChanged?.Invoke();
+                            OnProgressChanged?.Invoke();
+                            Debug.Log($"[Firebase] Cloud profile synced successfully: {username}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning($"[Firebase] Could not parse cloud record: {ex.Message}");
+                    }
+                }
+            }
+        }
+    }
+
+    private IEnumerator SyncToCloudCoroutine(UserAccount acc)
+    {
+        if (acc == null || string.IsNullOrEmpty(acc.username)) yield break;
+        string safeKey = SanitizeFirebaseKey(acc.username);
+        string url = $"{FIREBASE_DB_URL}/accounts/{safeKey}.json";
+        string json = JsonUtility.ToJson(acc);
+        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
+
+        using (UnityWebRequest req = new UnityWebRequest(url, "PUT"))
+        {
+            req.uploadHandler = new UploadHandlerRaw(body);
+            req.downloadHandler = new DownloadHandlerBuffer();
+            req.SetRequestHeader("Content-Type", "application/json");
+            req.timeout = 5;
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log($"[Firebase] Profile synced to cloud: {acc.username}");
+            }
+            else
+            {
+                Debug.LogWarning($"[Firebase] Cloud sync notice: {req.error}");
+            }
+        }
+    }
+
+    #endregion
 }
+
