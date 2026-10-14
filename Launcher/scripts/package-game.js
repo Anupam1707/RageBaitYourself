@@ -29,6 +29,11 @@ const targets = [
     outputZip: 'RageBaitYourself-win-x64.zip'
   },
   {
+    name: 'Windows 32-bit (x86)',
+    folder: 'RageBaitYourself-0.1-win-x86',
+    outputZip: 'RageBaitYourself-win-ia32.zip'
+  },
+  {
     name: 'Linux x86_64',
     folder: 'RageBaitYourself-0.1-linux-x86_64',
     outputZip: 'RageBaitYourself-linux-x86_64.zip'
