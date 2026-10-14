@@ -44,11 +44,9 @@ if (!token) {
   process.exit(1);
 }
 
-// 3. Check if release zips exist, or package them
-if (!fs.existsSync(releasesDir) || fs.readdirSync(releasesDir).filter(f => f.endsWith('.zip')).length === 0) {
-  console.log('📦 Release archives not found. Running package-game first...');
-  execSync('npm run package-game', { cwd: path.resolve(__dirname, '..'), stdio: 'inherit' });
-}
+// 3. Always package fresh release zips from FinalBuilds
+console.log('📦 Packaging fresh release archives from FinalBuilds...');
+execSync('npm run package-game', { cwd: path.resolve(__dirname, '..'), stdio: 'inherit' });
 
 const zipFiles = fs.readdirSync(releasesDir).filter(f => f.endsWith('.zip'));
 if (zipFiles.length === 0) {
