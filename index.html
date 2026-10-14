@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RageBait Yourself | The Ultimate Emotional Resilience Platformer</title>
+  
+  <meta name="description" content="Experience RageBait Yourself: an unforgiving, precision platformer with cloud save progression, dynamic physics, and an auto-updating desktop launcher for macOS, Windows, and Linux.">
+  <meta name="keywords" content="rage game, platformer, precision platformer, ragebait yourself, unity game, desktop launcher">
+  <meta property="og:title" content="RageBait Yourself | The Precision Rage Platformer">
+  <meta property="og:description" content="Play the ultimate rage platformer with seamless Firebase cloud save sync across all devices.">
+  <meta property="og:image" content="site-assets/logo.png">
+  <meta property="og:type" content="website">
+  
+  <link rel="icon" type="image/png" href="site-assets/logo.png">
+  <link rel="stylesheet" href="site-assets/style.css">
+</head>
+<body>
+
+  <!-- Ambient canvas and aura effects -->
+  <canvas id="ambient-canvas"></canvas>
+  <div class="aurora-blur"></div>
+
+  <!-- Top Navigation Bar -->
+  <header class="site-nav">
+    <a href="#" class="nav-brand">
+      <img src="site-assets/logo.png" alt="RageBait Crest" class="nav-logo">
+      <span class="nav-title">RAGEBAIT YOURSELF</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#levels">Chronicles</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#downloads">Downloads</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="https://github.com/Anupam1707/RageBaitYourself" target="_blank" rel="noopener" class="btn btn-secondary" style="padding: 0.6rem 1rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        GitHub
+      </a>
+      <a href="#downloads" class="btn btn-primary">Get Launcher</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero">
+      <div class="hero-pill">
+        <span class="live-dot"></span>
+        <span id="live-release-tag">v1.0.0 Stable</span>
+        <span>•</span>
+        <span id="cloud-sync-status">Firebase Cloud Active</span>
+      </div>
+
+      <h1 class="hero-title">
+        THE ULTIMATE TEST OF
+        <span class="gradient-rage">EMOTIONAL RESILIENCE</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        A punishing precision platformer engineered with merciless physics, trap mechanics, dynamic level chronicles, and instant cloud-synced player profiles.
+      </p>
+
+      <div class="hero-cta-group">
+        <a id="hero-download-btn" href="#downloads" class="btn btn-primary btn-hero-main">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Download Launcher</span>
+        </a>
+        <a href="#levels" class="btn btn-secondary" style="padding: 1rem 1.8rem; font-size: 1.05rem;">
+          Explore Levels
+        </a>
+      </div>
+      <div class="detected-os-text" id="detected-os">Detecting your platform...</div>
+
+      <!-- Preview Mockup Window -->
+      <div class="hero-visual" style="margin-top: 3.5rem;">
+        <div class="visual-top-bar">
+          <div class="traffic-dots">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+          </div>
+          <div>RageBait Yourself • Level Chronicles Live Preview</div>
+          <div style="color: var(--neon-cyan);">60 FPS LOCKED</div>
+        </div>
+        <img src="site-assets/bg.png" alt="RageBait Yourself Gameplay" class="visual-image">
+      </div>
+    </section>
+
+    <!-- Stats Banner -->
+    <section class="stats-banner">
+      <div class="stat-item">
+        <span class="stat-number cyan">6</span>
+        <span class="stat-label">Grueling Levels</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number rage">100%</span>
+        <span class="stat-label">Cloud Progress Sync</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number amber">3</span>
+        <span class="stat-label">OS Architectures</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number green">0</span>
+        <span class="stat-label">Checkpoints & Mercy</span>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+      <div class="section-header">
+        <span class="section-badge">Next-Gen Architecture</span>
+        <h2 class="section-title">Built for Performance & Seamless Sync</h2>
+        <p class="section-desc">From native cross-platform binaries to real-time cloud data pipelines, every component is meticulously optimized.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Firebase Cloud Sync</h3>
+          <p class="feature-desc">Level unlocks, death counters, wins, and scores sync seamlessly to the Firebase Realtime Database without lag or credential fatigue.</p>
+        </div>
+
+        <div class="feature-box rage">
+          <div class="feature-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Universal Desktop Launcher</h3>
+          <p class="feature-desc">Auto-detects updates, provides custom installation paths, directory relocation, patches chronicles, and offline recovery.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="14" x="2" y="3" rx="2"/>
+              <line x1="8" x2="16" y1="21" y2="21"/>
+              <line x1="12" x2="12" y1="17" y2="21"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Universal Apple Silicon & Intel</h3>
+          <p class="feature-desc">Compiled natively for macOS (M1/M2/M3/M4 & Intel x86_64), Windows 64-bit, and Linux with zero translation overhead.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="m4.93 4.93 4.24 4.24"/>
+              <path d="m14.83 9.17 4.24-4.24"/>
+              <path d="m14.83 14.83 4.24 4.24"/>
+              <path d="m9.17 14.83-4.24 4.24"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Full Offline Fallback</h3>
+          <p class="feature-desc">Lost your internet connection? Local JSON persistent databases take over automatically and merge cloud records upon reconnect.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Levels Section -->
+    <section class="section" id="levels">
+      <div class="section-header">
+        <span class="section-badge">Progression Trail</span>
+        <h2 class="section-title">The Six Circles of Precision</h2>
+        <p class="section-desc">Each level presents exponentially devious obstacles. One mistake sends you straight back to square one.</p>
+      </div>
+
+      <div class="levels-grid">
+        <div class="level-card">
+          <div class="level-img-wrap">
+            <span class="level-pill">LEVEL 01</span>
+            <img src="site-assets/lv1.png" alt="Level 1 - The Awakening" loading="lazy">
+          </div>
+          <div class="level-content">
+            <h3 class="level-title">The Awakening</h3>
+            <p class="level-desc">Basic precision jumps and static hazard fields. Teaches you the unforgiving physics of momentum.</p>
+            <div class="rage-bar">
+              <span>RAGE FACTOR</span>
+              <div class="meter-track"><div class="meter-fill" style="width: 25%;"></div></div>
+              <span>25%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="level-card">
+          <div class="level-img-wrap">
+            <span class="level-pill">LEVEL 02</span>
+            <img src="site-assets/lv2.png" alt="Level 2 - Shifting Sands" loading="lazy">
+          </div>
+          <div class="level-content">
+            <h3 class="level-title">Shifting Sands</h3>
+            <p class="level-desc">Oscillating platforms and sudden momentum-breaking obstacles designed to punish impatience.</p>
+            <div class="rage-bar">
+              <span>RAGE FACTOR</span>
+              <div class="meter-track"><div class="meter-fill" style="width: 45%;"></div></div>
+              <span>45%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="level-card">
+          <div class="level-img-wrap">
+            <span class="level-pill">LEVEL 03</span>
+            <img src="site-assets/lv3.png" alt="Level 3 - The Descent" loading="lazy">
+          </div>
+          <div class="level-content">
+            <h3 class="level-title">The Descent</h3>
+            <p class="level-desc">Vertical drop shafts with razor-thin landing margins. Gravity is your deadliest adversary.</p>
+            <div class="rage-bar">
+              <span>RAGE FACTOR</span>
+              <div class="meter-track"><div class="meter-fill" style="width: 65%;"></div></div>
+              <span>65%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="level-card">
+          <div class="level-img-wrap">
+            <span class="level-pill">LEVEL 04</span>
+            <img src="site-assets/lv4.png" alt="Level 4 - Kinetic Chaos" loading="lazy">
+          </div>
+          <div class="level-content">
+            <h3 class="level-title">Kinetic Chaos</h3>
+            <p class="level-desc">Synchronized hazard sweeps. Requiring millisecond timing and split-second twitch reflexes.</p>
+            <div class="rage-bar">
+              <span>RAGE FACTOR</span>
+              <div class="meter-track"><div class="meter-fill" style="width: 80%;"></div></div>
+              <span>80%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="level-card">
+          <div class="level-img-wrap">
+            <span class="level-pill">LEVEL 05</span>
+            <img src="site-assets/lv5.png" alt="Level 5 - The Mirage" loading="lazy">
+          </div>
+          <div class="level-content">
+            <h3 class="level-title">The Mirage</h3>
+            <p class="level-desc">Disappearing footholds and optical deceptions. Don't believe everything you see.</p>
+            <div class="rage-bar">
+              <span>RAGE FACTOR</span>
+              <div class="meter-track"><div class="meter-fill" style="width: 92%;"></div></div>
+              <span>92%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="level-card">
+          <div class="level-img-wrap">
+            <span class="level-pill">LEVEL 06</span>
+            <img src="site-assets/lv6.png" alt="Level 6 - Absolute Rage" loading="lazy">
+          </div>
+          <div class="level-content">
+            <h3 class="level-title">Absolute Rage</h3>
+            <p class="level-desc">The ultimate gauntlet. Unrelenting, unforgiving, and designed to test the absolute limits of human patience.</p>
+            <div class="rage-bar">
+              <span>RAGE FACTOR</span>
+              <div class="meter-track"><div class="meter-fill" style="width: 100%;"></div></div>
+              <span>100%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Downloads Section for All Architectures -->
+    <section class="section" id="downloads">
+      <div class="section-header">
+        <span class="section-badge">Downloads & Installers</span>
+        <h2 class="section-title">Select Your Architecture</h2>
+        <p class="section-desc">Download the auto-updating RageBait Launcher or grab direct standalone builds for your OS.</p>
+      </div>
+
+      <!-- Platform Tabs -->
+      <div class="download-tabs">
+        <button class="tab-btn active" data-tab="mac">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17C16.63 3.37 17.07 2.25 16.95 1.13c-.98.04-2.17.65-2.87 1.47-.62.72-1.16 1.87-1.02 2.97 1.09.08 2.22-.56 2.91-1.4z"/>
+          </svg>
+          macOS Universal
+        </button>
+        <button class="tab-btn" data-tab="win">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
+          </svg>
+          Windows
+        </button>
+        <button class="tab-btn" data-tab="linux">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.003 2c-2.4 0-4.347 1.954-4.347 4.354 0 .973.327 1.868.877 2.585C7.03 9.774 6 11.258 6 13.003c0 1.242.52 2.363 1.353 3.167-.225.592-.353 1.233-.353 1.905 0 2.715 2.22 4.925 4.95 4.925 2.73 0 4.95-2.21 4.95-4.925 0-.672-.128-1.313-.353-1.905.833-.804 1.353-1.925 1.353-3.167 0-1.745-1.03-3.229-2.533-4.064.55-.717.877-1.612.877-2.585C16.25 3.954 14.403 2 12.003 2z"/>
+          </svg>
+          Linux
+        </button>
+        <button class="tab-btn" data-tab="standalone">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+          Standalone Game (Direct)
+        </button>
+      </div>
+
+      <!-- macOS Panel -->
+      <div class="platform-panel active" id="tab-mac">
+        <div class="download-cards-grid">
+          <div class="download-card">
+            <span class="card-badge">RECOMMENDED</span>
+            <div class="download-card-header">
+              <h3 class="download-card-title">RageBait Launcher (DMG)</h3>
+              <p class="download-card-desc">Universal installer with auto-updater, multi-account manager & directory settings.</p>
+            </div>
+            <ul class="specs-list">
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Apple Silicon (M1, M2, M3, M4) & Intel x86_64</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> macOS 10.15+ (Catalina through Sequoia)</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Drag & Drop Applications Install</li>
+            </ul>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+              <a id="dl-mac-dmg" href="https://github.com/Anupam1707/RageBaitYourself/releases/latest" class="btn btn-primary" style="flex: 1;">
+                Download .DMG
+              </a>
+              <span class="asset-size" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);">~105 MB</span>
+            </div>
+          </div>
+
+          <div class="download-card">
+            <div class="download-card-header">
+              <h3 class="download-card-title">macOS Package (.PKG)</h3>
+              <p class="download-card-desc">Standard system installer package for managed environments.</p>
+            </div>
+            <ul class="specs-list">
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Automated guided installation</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Universal binary architecture</li>
+            </ul>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+              <a id="dl-mac-pkg" href="https://github.com/Anupam1707/RageBaitYourself/releases/latest" class="btn btn-secondary" style="flex: 1;">
+                Download .PKG
+              </a>
+              <span class="asset-size" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);">~106 MB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Windows Panel -->
+      <div class="platform-panel" id="tab-win">
+        <div class="download-cards-grid">
+          <div class="download-card">
+            <span class="card-badge">RECOMMENDED</span>
+            <div class="download-card-header">
+              <h3 class="download-card-title">Windows Launcher Setup (.EXE)</h3>
+              <p class="download-card-desc">Full NSIS installer with desktop shortcuts and auto-patching.</p>
+            </div>
+            <ul class="specs-list">
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Windows 10 & Windows 11 (64-bit)</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Auto-downloads DirectX / Visual C++ runtimes</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Custom directory selection support</li>
+            </ul>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+              <a id="dl-win-exe" href="https://github.com/Anupam1707/RageBaitYourself/releases/latest" class="btn btn-primary" style="flex: 1;">
+                Download for Windows
+              </a>
+              <span class="asset-size" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);">~80 MB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linux Panel -->
+      <div class="platform-panel" id="tab-linux">
+        <div class="download-cards-grid">
+          <div class="download-card">
+            <span class="card-badge">UNIVERSAL</span>
+            <div class="download-card-header">
+              <h3 class="download-card-title">Linux AppImage</h3>
+              <p class="download-card-desc">Self-contained executable for Ubuntu, Fedora, Arch, Debian, and SteamOS.</p>
+            </div>
+            <ul class="specs-list">
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Zero installation required (chmod +x)</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> glibc 2.28+ compatible</li>
+            </ul>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+              <a id="dl-linux-appimage" href="https://github.com/Anupam1707/RageBaitYourself/releases/latest" class="btn btn-primary" style="flex: 1;">
+                Download AppImage
+              </a>
+              <span class="asset-size" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);">~95 MB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Standalone Direct Game Panel -->
+      <div class="platform-panel" id="tab-standalone">
+        <div class="download-cards-grid">
+          <div class="download-card">
+            <div class="download-card-header">
+              <h3 class="download-card-title">macOS Standalone Game (.ZIP)</h3>
+              <p class="download-card-desc">Direct game bundle without launcher dependency.</p>
+            </div>
+            <a id="dl-game-mac" href="https://github.com/Anupam1707/RageBaitYourself/releases/latest" class="btn btn-secondary">
+              Download Game (macOS)
+            </a>
+          </div>
+
+          <div class="download-card">
+            <div class="download-card-header">
+              <h3 class="download-card-title">Windows x64 Standalone (.ZIP)</h3>
+              <p class="download-card-desc">Portable game folder. Extract and run RageBaitYourself.exe.</p>
+            </div>
+            <a id="dl-game-win" href="https://github.com/Anupam1707/RageBaitYourself/releases/latest" class="btn btn-secondary">
+              Download Game (Windows)
+            </a>
+          </div>
+
+          <div class="download-card">
+            <div class="download-card-header">
+              <h3 class="download-card-title">Linux x86_64 Standalone (.ZIP)</h3>
+              <p class="download-card-desc">Direct Linux native build. Run RageBaitYourself.x86_64.</p>
+            </div>
+            <a id="dl-game-linux" href="https://github.com/Anupam1707/RageBaitYourself/releases/latest" class="btn btn-secondary">
+              Download Game (Linux)
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <img src="site-assets/logo.png" alt="RageBait Logo" style="width: 44px; height: 44px; border-radius: 8px;">
+        <div>
+          <div style="font-family: var(--font-display); font-weight: 800; font-size: 1.15rem;">RageBait Yourself</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Precision Platformer & Cloud Ecosystem</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1.5rem; font-size: 0.9rem;">
+        <a href="#downloads" style="color: var(--text-muted); text-decoration: none;">Installers</a>
+        <a href="#levels" style="color: var(--text-muted); text-decoration: none;">Levels</a>
+        <a href="https://github.com/Anupam1707/RageBaitYourself/releases" target="_blank" rel="noopener" style="color: var(--text-muted); text-decoration: none;">Release Notes</a>
+        <a href="https://github.com/Anupam1707/RageBaitYourself" target="_blank" rel="noopener" style="color: var(--text-muted); text-decoration: none;">GitHub</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>Crafted with precision & rage by Anupam1707 • Open Source under MIT</div>
+      <div>Realtime Cloud powered by Firebase • Unity 2022.3 LTS Engine</div>
+    </div>
+  </footer>
+
+  <script src="site-assets/script.js"></script>
+</body>
+</html>
