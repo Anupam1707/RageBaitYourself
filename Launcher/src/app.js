@@ -13,9 +13,6 @@ const btnClose = document.getElementById('btnClose');
 const navTabs = document.querySelectorAll('.nav-tab');
 const tabContents = document.querySelectorAll('.tab-content');
 
-const statusDot = document.getElementById('statusDot');
-const statusText = document.getElementById('statusText');
-
 const gameClientStatus = document.getElementById('gameClientStatus');
 const installedVersionText = document.getElementById('installedVersionText');
 const latestVersionText = document.getElementById('latestVersionText');
@@ -32,14 +29,6 @@ const btnMainActionText = document.getElementById('btnMainActionText');
 const patchNotesMeta = document.getElementById('patchNotesMeta');
 const patchNotesContent = document.getElementById('patchNotesContent');
 const btnRefreshReleases = document.getElementById('btnRefreshReleases');
-
-const settingsForm = document.getElementById('settingsForm');
-const cfgGithubOwner = document.getElementById('cfgGithubOwner');
-const cfgGithubRepo = document.getElementById('cfgGithubRepo');
-const cfgInstallDir = document.getElementById('cfgInstallDir');
-const btnBrowseInstallDir = document.getElementById('btnBrowseInstallDir');
-const cfgAutoClose = document.getElementById('cfgAutoClose');
-const btnTestLocalBuild = document.getElementById('btnTestLocalBuild');
 const toastNotice = document.getElementById('toastNotice');
 
 // Window Controls
@@ -161,8 +150,6 @@ function updateLauncherUI() {
 // Initial Sync & Check
 async function refreshState() {
   try {
-    statusDot.className = 'status-dot syncing';
-    statusText.textContent = 'Checking updates...';
     btnMainActionText.textContent = 'CHECKING...';
     btnMainAction.disabled = true;
 
@@ -173,23 +160,17 @@ async function refreshState() {
     latestRelease = await window.launcherAPI.fetchLatestRelease();
 
     if (latestRelease && latestRelease.success) {
-      statusDot.className = 'status-dot online';
-      statusText.textContent = `Connected (${currentConfig.githubOwner}/${currentConfig.githubRepo})`;
-
       // Populate patch notes
       patchNotesMeta.textContent = `Release: ${latestRelease.name} • Tag: ${latestRelease.tag} • ${new Date(latestRelease.publishedAt).toLocaleDateString()}`;
       patchNotesContent.textContent = latestRelease.body || 'No release notes provided.';
     } else {
-      statusDot.className = 'status-dot online';
-      statusText.textContent = 'GitHub: Ready (No online releases yet)';
-      patchNotesMeta.textContent = `Repository: ${currentConfig.githubOwner}/${currentConfig.githubRepo}`;
-      patchNotesContent.textContent = latestRelease.error || 'No remote release found yet. You can push a release tag to GitHub or use "Install from Local FinalBuilds" in Settings.';
+      patchNotesMeta.textContent = 'RageBait Yourself Patch History';
+      patchNotesContent.textContent = 'Welcome to RageBait Yourself!\n\nNo online patch updates yet. When new content, performance enhancements, or new levels are released, patch notes will be displayed right here.';
     }
 
     updateLauncherUI();
   } catch (err) {
-    statusDot.className = 'status-dot error';
-    statusText.textContent = 'Sync error: ' + err.message;
+    console.error('Sync error:', err);
     updateLauncherUI();
   }
 }
@@ -287,49 +268,8 @@ btnMainAction.addEventListener('click', async () => {
   }
 });
 
-// Settings & Directory Handlers
-btnBrowseInstallDir.addEventListener('click', async () => {
-  const dir = await window.launcherAPI.selectDirectory();
-  if (dir) {
-    cfgInstallDir.value = dir;
-  }
-});
-
 btnOpenGameDir.addEventListener('click', () => {
   window.launcherAPI.openGameDir();
-});
-
-settingsForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const newConfig = {
-    ...currentConfig,
-    githubOwner: cfgGithubOwner.value.trim(),
-    githubRepo: cfgGithubRepo.value.trim(),
-    installDir: cfgInstallDir.value.trim(),
-    autoCloseLauncher: cfgAutoClose.checked
-  };
-
-  const saved = await window.launcherAPI.saveConfig(newConfig);
-  if (saved) {
-    currentConfig = newConfig;
-    showToast('Settings saved successfully!');
-    await refreshState();
-  } else {
-    showToast('Error saving settings');
-  }
-});
-
-btnTestLocalBuild.addEventListener('click', async () => {
-  showToast('Copying local build from FinalBuilds...');
-  const res = await window.launcherAPI.installFromLocalBuild();
-  if (res.success) {
-    showToast('Local build installed & ready!');
-    await refreshState();
-    // Switch to game tab
-    document.querySelector('.nav-tab[data-tab="play"]').click();
-  } else {
-    showToast('Error: ' + res.error);
-  }
 });
 
 btnRefreshReleases.addEventListener('click', () => {
@@ -355,11 +295,6 @@ if (btnDevIssues) {
 // App Startup
 async function init() {
   currentConfig = await window.launcherAPI.getConfig();
-  cfgGithubOwner.value = currentConfig.githubOwner;
-  cfgGithubRepo.value = currentConfig.githubRepo;
-  cfgInstallDir.value = currentConfig.installDir;
-  cfgAutoClose.checked = !!currentConfig.autoCloseLauncher;
-
   await refreshState();
 }
 

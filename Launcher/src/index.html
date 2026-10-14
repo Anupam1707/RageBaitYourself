@@ -34,11 +34,6 @@
         <button class="nav-tab" data-tab="patchnotes">PATCH NOTES</button>
         <button class="nav-tab" data-tab="levels">LEVELS INTEL</button>
         <button class="nav-tab" data-tab="about">ABOUT DEV</button>
-        <button class="nav-tab" data-tab="settings">SETTINGS</button>
-      </div>
-      <div class="system-status">
-        <span class="status-dot online" id="statusDot"></span>
-        <span class="status-text" id="statusText">Checking GitHub...</span>
       </div>
     </nav>
 
@@ -272,48 +267,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Tab 5: Settings -->
-    <div class="tab-content" id="tab-settings">
-      <div class="panel-container">
-        <h2 class="panel-title">LAUNCHER & UPDATER SETTINGS</h2>
-        <p class="panel-subtitle">Configure update sources, install directories, and execution options</p>
-
-        <form class="settings-form" id="settingsForm">
-          <div class="setting-group">
-            <label class="setting-label">GitHub Repository (Update Channel)</label>
-            <div class="input-inline">
-              <input type="text" id="cfgGithubOwner" class="text-input" placeholder="Owner (e.g. anupamkanoongo)" required>
-              <span class="slash">/</span>
-              <input type="text" id="cfgGithubRepo" class="text-input" placeholder="Repo (e.g. RageBaitYourself)" required>
-            </div>
-            <span class="setting-help">The launcher queries GitHub Releases from this repo to discover and download new versions.</span>
-          </div>
-
-          <div class="setting-group">
-            <label class="setting-label">Game Installation Directory</label>
-            <div class="input-inline">
-              <input type="text" id="cfgInstallDir" class="text-input full-width" readonly>
-              <button type="button" class="secondary-btn" id="btnBrowseInstallDir">Browse...</button>
-            </div>
-            <span class="setting-help">Where game binaries, updates, and assets are unpacked and executed.</span>
-          </div>
-
-          <div class="setting-group">
-            <label class="setting-label">Launcher Behavior</label>
-            <div class="checkbox-row">
-              <input type="checkbox" id="cfgAutoClose">
-              <label for="cfgAutoClose">Auto-minimize launcher while the game is running</label>
-            </div>
-          </div>
-
-          <div class="settings-actions">
-            <button type="submit" class="save-btn">Save Settings</button>
-            <button type="button" class="secondary-btn" id="btnTestLocalBuild">Install from Local FinalBuilds (Offline Test)</button>
-          </div>
-        </form>
       </div>
     </div>
 
