@@ -90,11 +90,21 @@ function githubRequest(endpoint, method = 'GET', data = null, customHeaders = {}
   });
 }
 
+function getMimeType(filename) {
+  if (filename.endsWith('.dmg')) return 'application/x-apple-diskimage';
+  if (filename.endsWith('.pkg')) return 'application/octet-stream';
+  if (filename.endsWith('.AppImage')) return 'application/x-executable';
+  if (filename.endsWith('.tar.gz')) return 'application/gzip';
+  if (filename.endsWith('.zip')) return 'application/zip';
+  return 'application/octet-stream';
+}
+
 async function uploadAsset(uploadUrlTemplate, filePath) {
   const fileName = path.basename(filePath);
   const fileStats = fs.statSync(filePath);
   const fileSize = fileStats.size;
   const mb = (fileSize / (1024 * 1024)).toFixed(2);
+  const mimeType = getMimeType(fileName);
 
   // Upload url comes in format: https://uploads.github.com/repos/.../releases/{id}/assets{?name,label}
   const baseUrl = uploadUrlTemplate.replace(/\{\?name,label\}/, '');
@@ -109,7 +119,7 @@ async function uploadAsset(uploadUrlTemplate, filePath) {
       headers: {
         'User-Agent': 'RageBait-Release-CLI',
         'Authorization': `token ${token}`,
-        'Content-Type': 'application/zip',
+        'Content-Type': mimeType,
         'Content-Length': fileSize
       }
     }, (res) => {
@@ -133,6 +143,36 @@ async function uploadAsset(uploadUrlTemplate, filePath) {
 
 async function main() {
   try {
+    // Collect all candidate assets: Launchers + Game builds
+    const filesToUpload = [];
+
+    // 1. Game Archives
+    if (fs.existsSync(releasesDir)) {
+      const gameFiles = fs.readdirSync(releasesDir).filter(f => f.endsWith('.zip'));
+      for (const f of gameFiles) {
+        filesToUpload.push(path.join(releasesDir, f));
+      }
+    }
+
+    // 2. Launcher Installers from Launcher/dist
+    const launcherDistDir = path.resolve(__dirname, '../dist');
+    if (fs.existsSync(launcherDistDir)) {
+      const allowedExts = ['.dmg', '.pkg', '.AppImage', '.tar.gz', '.zip'];
+      const launcherFiles = fs.readdirSync(launcherDistDir).filter(f => {
+        const lower = f.toLowerCase();
+        if (lower.endsWith('.blockmap') || lower.endsWith('.yml') || lower.endsWith('.yaml') || lower.endsWith('.plist')) {
+          return false;
+        }
+        return allowedExts.some(ext => lower.endsWith(ext));
+      });
+
+      for (const f of launcherFiles) {
+        filesToUpload.push(path.join(launcherDistDir, f));
+      }
+    }
+
+    console.log(`\nFound ${filesToUpload.length} total release assets to publish (Launchers + Game Builds).`);
+
     // 1. Check if release already exists for this tag
     let release;
     try {
@@ -154,16 +194,17 @@ async function main() {
     // 2. Fetch existing assets to avoid duplicate upload errors
     const existingAssets = release.assets || [];
 
-    for (const file of zipFiles) {
-      const existing = existingAssets.find(a => a.name === file);
+    for (const filePath of filesToUpload) {
+      const fileName = path.basename(filePath);
+      const existing = existingAssets.find(a => a.name === fileName);
       if (existing) {
-        console.log(`🗑️ Removing previous version of ${file} (ID: ${existing.id})...`);
+        console.log(`🗑️ Removing previous version of ${fileName} (ID: ${existing.id})...`);
         await githubRequest(`/repos/${OWNER}/${REPO}/releases/assets/${existing.id}`, 'DELETE');
       }
 
-      const filePath = path.join(releasesDir, file);
       await uploadAsset(release.upload_url, filePath);
     }
+
 
     console.log(`\n🎉 Success! Release published to:`);
     console.log(release.html_url);

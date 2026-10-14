@@ -9,11 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initNavbarScroll();
   fetchReleaseAssets();
-  fetchDeveloperProfile();
   pingCloudStatus();
 });
 
-// 1. Ambient Background Glow Canvas
+// 1. Game Atmosphere Embers Canvas
 function initAmbientCanvas() {
   const canvas = document.getElementById('ambient-canvas');
   if (!canvas) return;
@@ -29,15 +28,19 @@ function initAmbientCanvas() {
   window.addEventListener('resize', resize);
   resize();
 
-  for (let i = 0; i < 45; i++) {
+  // Create fiery embers & mystical sparks
+  for (let i = 0; i < 55; i++) {
     particles.push({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      radius: Math.random() * 2 + 0.8,
-      color: Math.random() > 0.4 ? 'rgba(0, 240, 255, ' : 'rgba(255, 46, 99, ',
-      alpha: Math.random() * 0.4 + 0.1
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: -(Math.random() * 0.8 + 0.3), // Drifts gently upward like embers
+      radius: Math.random() * 2.2 + 0.8,
+      color: Math.random() > 0.65 
+        ? 'rgba(229, 185, 88, '   // Gold spark
+        : (Math.random() > 0.4 ? 'rgba(230, 25, 60, ' : 'rgba(0, 229, 255, '), // Crimson lava or cyan crystal
+      alpha: Math.random() * 0.6 + 0.2,
+      decay: Math.random() * 0.004 + 0.002
     });
   }
 
@@ -47,16 +50,24 @@ function initAmbientCanvas() {
     for (let p of particles) {
       p.x += p.vx;
       p.y += p.vy;
+      p.alpha -= p.decay;
 
+      // Respawn at bottom when faded or off screen
+      if (p.y < -10 || p.alpha <= 0) {
+        p.y = height + 10;
+        p.x = Math.random() * width;
+        p.alpha = Math.random() * 0.6 + 0.2;
+      }
       if (p.x < 0) p.x = width;
       if (p.x > width) p.x = 0;
-      if (p.y < 0) p.y = height;
-      if (p.y > height) p.y = 0;
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
       ctx.fillStyle = p.color + p.alpha + ')';
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = p.color + '0.8)';
       ctx.fill();
+      ctx.shadowBlur = 0;
     }
     requestAnimationFrame(loop);
   }
@@ -207,38 +218,7 @@ async function fetchReleaseAssets() {
   }
 }
 
-// 6. Fetch Developer Profile from GitHub
-async function fetchDeveloperProfile() {
-  try {
-    const res = await fetch(`https://api.github.com/users/${OWNER}`);
-    if (!res.ok) return;
-    const user = await res.json();
-
-    const avatar = document.getElementById('dev-avatar');
-    if (avatar && user.avatar_url) {
-      avatar.src = user.avatar_url;
-    }
-
-    const nameEl = document.getElementById('dev-name');
-    if (nameEl && user.name) {
-      nameEl.textContent = user.name;
-    }
-
-    const reposEl = document.getElementById('dev-repos');
-    if (reposEl && user.public_repos !== undefined) {
-      reposEl.textContent = user.public_repos;
-    }
-
-    const locEl = document.getElementById('dev-location');
-    if (locEl && user.location) {
-      locEl.textContent = user.location;
-    }
-  } catch (err) {
-    console.warn('Could not fetch GitHub user info:', err);
-  }
-}
-
-// 7. Firebase RTDB Cloud Status Ping
+// 6. Firebase RTDB Cloud Status Ping
 async function pingCloudStatus() {
   try {
     const res = await fetch(`${FIREBASE_DB}/.json?shallow=true`, { method: 'HEAD' });
