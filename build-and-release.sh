@@ -3,6 +3,7 @@ set -e
 
 TAG="${1:-v0.2}"
 MODE="${2:-all}"
+export GAME_VERSION="$TAG"
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 

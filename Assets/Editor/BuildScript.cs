@@ -15,9 +15,21 @@ public class BuildScript
             .ToArray();
     }
 
+    private static void ApplyVersionFromEnv()
+    {
+        string ver = System.Environment.GetEnvironmentVariable("GAME_VERSION");
+        if (!string.IsNullOrEmpty(ver))
+        {
+            ver = ver.TrimStart('v', 'V');
+            PlayerSettings.bundleVersion = ver;
+            Debug.Log($"🏷️ Set Unity PlayerSettings.bundleVersion to: {ver}");
+        }
+    }
+
     [MenuItem("Build/Build All Platforms")]
     public static void BuildAll()
     {
+        ApplyVersionFromEnv();
         string[] scenes = GetScenes();
         string rootDir = Directory.GetCurrentDirectory();
         string outputDir = Path.Combine(rootDir, "FinalBuilds");
@@ -33,16 +45,16 @@ public class BuildScript
         try {
             PlayerSettings.SetArchitecture(UnityEditor.Build.NamedBuildTarget.Standalone, 2);
         } catch {}
-        BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-0.1-macos-universal.app"), BuildTarget.StandaloneOSX);
+        BuildForPlatform(scenes, Path.Combine(outputDir, "RageBait Yourself.app"), BuildTarget.StandaloneOSX);
 
         // 2. Windows 64-bit (x64)
-        BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-0.1-win-x64", "RageBaitYourself.exe"), BuildTarget.StandaloneWindows64);
+        BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-win-x64", "RageBaitYourself.exe"), BuildTarget.StandaloneWindows64);
 
         // 3. Windows 32-bit (x86 / ia32 separate)
-        BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-0.1-win-x86", "RageBaitYourself.exe"), BuildTarget.StandaloneWindows);
+        BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-win-ia32", "RageBaitYourself.exe"), BuildTarget.StandaloneWindows);
 
         // 4. Linux 64-bit (x86_64)
-        BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-0.1-linux-x86_64", "RageBaitYourself.x86_64"), BuildTarget.StandaloneLinux64);
+        BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-linux-x86_64", "RageBaitYourself.x86_64"), BuildTarget.StandaloneLinux64);
 
         Debug.Log("🎉 All platforms built successfully!");
     }
@@ -50,9 +62,10 @@ public class BuildScript
     [MenuItem("Build/Build macOS Only")]
     public static void BuildMacOS()
     {
+        ApplyVersionFromEnv();
         string rootDir = Directory.GetCurrentDirectory();
         string outputDir = Path.Combine(rootDir, "FinalBuilds");
-        BuildForPlatform(GetScenes(), Path.Combine(outputDir, "RageBaitYourself-0.1-macos-universal.app"), BuildTarget.StandaloneOSX);
+        BuildForPlatform(GetScenes(), Path.Combine(outputDir, "RageBait Yourself.app"), BuildTarget.StandaloneOSX);
     }
 
     private static void BuildForPlatform(string[] scenes, string outputPath, BuildTarget target)
