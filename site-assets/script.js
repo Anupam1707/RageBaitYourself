@@ -218,13 +218,13 @@ async function fetchReleaseAssets() {
   }
 }
 
-// 6. Firebase RTDB Cloud Status Ping
+// 6. Realtime Cloud Status Ping
 async function pingCloudStatus() {
   try {
     const res = await fetch(`${FIREBASE_DB}/.json?shallow=true`, { method: 'HEAD' });
     const cloudBadge = document.getElementById('cloud-sync-status');
     if (cloudBadge && res.ok) {
-      cloudBadge.textContent = 'ONLINE • RTDB LIVE';
+      cloudBadge.textContent = 'ONLINE • CLOUD LIVE';
       cloudBadge.style.color = '#00ff88';
     }
   } catch (_) {}
