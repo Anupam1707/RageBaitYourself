@@ -195,6 +195,157 @@ ipcMain.handle('select-directory', async () => {
   return null;
 });
 
+// Recursive folder copy helper
+function copyFolderRecursiveSync(source, target) {
+  if (!fs.existsSync(target)) {
+    fs.mkdirSync(target, { recursive: true });
+  }
+
+  const files = fs.readdirSync(source);
+  for (const file of files) {
+    const curSource = path.join(source, file);
+    const curTarget = path.join(target, file);
+    if (fs.lstatSync(curSource).isDirectory()) {
+      copyFolderRecursiveSync(curSource, curTarget);
+    } else {
+      fs.copyFileSync(curSource, curTarget);
+    }
+  }
+}
+
+// Sync user account profile into Unity user_accounts_db.json
+function syncUserAccountToGame(userProfile, installDir) {
+  if (!userProfile || !userProfile.username) return;
+
+  const targetLocations = [];
+
+  // 1. In game install directory
+  if (installDir && fs.existsSync(installDir)) {
+    targetLocations.push(path.join(installDir, 'user_accounts_db.json'));
+  }
+
+  // 2. In Unity persistentDataPath locations
+  const home = app.getPath('home');
+  if (process.platform === 'darwin') {
+    targetLocations.push(path.join(home, 'Library/Application Support/DefaultCompany/RageBait Yourself/user_accounts_db.json'));
+    targetLocations.push(path.join(home, 'Library/Application Support/com.DefaultCompany.RageBait-Yourself/user_accounts_db.json'));
+  } else if (process.platform === 'win32') {
+    const appData = process.env.APPDATA || '';
+    if (appData) {
+      targetLocations.push(path.join(appData, '../LocalLow/DefaultCompany/RageBait Yourself/user_accounts_db.json'));
+    }
+  } else {
+    targetLocations.push(path.join(home, '.config/unity3d/DefaultCompany/RageBait Yourself/user_accounts_db.json'));
+  }
+
+  for (const dbPath of targetLocations) {
+    try {
+      let dbData = { activeUsername: userProfile.username, accounts: [] };
+      if (fs.existsSync(dbPath)) {
+        try {
+          dbData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+        } catch (_) {}
+      }
+
+      if (!dbData.accounts) dbData.accounts = [];
+
+      let account = dbData.accounts.find(a => a.username && a.username.toLowerCase() === userProfile.username.toLowerCase());
+      if (account) {
+        account.email = userProfile.email || account.email || '';
+        account.password = userProfile.password || account.password || '';
+        account.lastPlayed = new Date().toISOString().replace('T', ' ').substring(0, 16);
+      } else {
+        account = {
+          username: userProfile.username,
+          email: userProfile.email || '',
+          password: userProfile.password || '',
+          maxUnlockedLevel: 1,
+          totalScore: 0,
+          totalDeaths: 0,
+          totalWins: 0,
+          lastPlayed: new Date().toISOString().replace('T', ' ').substring(0, 16),
+          completedAllLevels: false
+        };
+        dbData.accounts.push(account);
+      }
+
+      dbData.activeUsername = userProfile.username;
+
+      fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+      fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2), 'utf8');
+      console.log(`[AccountSync] Successfully synced account to: ${dbPath}`);
+    } catch (err) {
+      console.warn(`[AccountSync] Could not write to ${dbPath}:`, err.message);
+    }
+  }
+}
+
+// Change install directory & move content
+ipcMain.handle('change-install-dir', async (event, newDir) => {
+  try {
+    if (!newDir) return { success: false, error: 'No directory selected' };
+    const config = loadConfig();
+    const oldDir = config.installDir;
+
+    if (path.resolve(oldDir) === path.resolve(newDir)) {
+      return { success: true, newDir };
+    }
+
+    fs.mkdirSync(newDir, { recursive: true });
+
+    // Move existing files if oldDir exists and has content
+    if (fs.existsSync(oldDir)) {
+      const files = fs.readdirSync(oldDir);
+      if (files.length > 0) {
+        console.log(`Moving files from ${oldDir} to ${newDir}...`);
+        copyFolderRecursiveSync(oldDir, newDir);
+        // Clean up oldDir contents
+        for (const f of files) {
+          try {
+            fs.rmSync(path.join(oldDir, f), { recursive: true, force: true });
+          } catch (_) {}
+        }
+      }
+    }
+
+    config.installDir = newDir;
+    saveConfig(config);
+
+    // Sync user account if present
+    if (config.userProfile) {
+      syncUserAccountToGame(config.userProfile, newDir);
+    }
+
+    return { success: true, newDir };
+  } catch (err) {
+    console.error('Failed to change install directory:', err);
+    return { success: false, error: err.message };
+  }
+});
+
+// User Profile IPC
+ipcMain.handle('save-user-profile', async (event, profile) => {
+  try {
+    const config = loadConfig();
+    config.userProfile = {
+      username: (profile.username || '').trim(),
+      email: (profile.email || '').trim(),
+      password: profile.password || '',
+      registeredAt: new Date().toISOString()
+    };
+    saveConfig(config);
+    syncUserAccountToGame(config.userProfile, config.installDir);
+    return { success: true, profile: config.userProfile };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+});
+
+ipcMain.handle('get-user-profile', async () => {
+  const config = loadConfig();
+  return config.userProfile || null;
+});
+
 // Check installed state
 ipcMain.handle('check-installed-status', async () => {
   const config = loadConfig();
@@ -281,6 +432,58 @@ ipcMain.handle('fetch-latest-release', async () => {
       });
     }).on('error', (err) => {
       resolve({ success: false, error: 'Network error connecting to GitHub: ' + err.message });
+    });
+  });
+});
+
+// Fetch All Releases from GitHub (for Patches Timeline)
+ipcMain.handle('fetch-all-releases', async () => {
+  const config = loadConfig();
+  const { githubOwner, githubRepo } = config;
+
+  return new Promise((resolve) => {
+    const options = {
+      hostname: 'api.github.com',
+      path: `/repos/${githubOwner}/${githubRepo}/releases?per_page=50`,
+      headers: {
+        'User-Agent': 'RageBait-Launcher',
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    };
+
+    https.get(options, (res) => {
+      let data = '';
+      res.on('data', chunk => { data += chunk; });
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          try {
+            const rawReleases = JSON.parse(data);
+            const total = rawReleases.length;
+            const formatted = rawReleases.map((r, idx) => ({
+              id: r.id,
+              releaseNumber: total - idx,
+              tag: r.tag_name,
+              name: r.name || r.tag_name,
+              publishedAt: r.published_at,
+              htmlUrl: r.html_url,
+              body: r.body,
+              assetsCount: r.assets ? r.assets.length : 0,
+              assets: (r.assets || []).map(a => ({
+                name: a.name,
+                size: a.size,
+                downloadCount: a.download_count
+              }))
+            }));
+            resolve({ success: true, releases: formatted });
+          } catch (e) {
+            resolve({ success: false, error: 'Failed to parse releases: ' + e.message, releases: [] });
+          }
+        } else {
+          resolve({ success: false, error: `GitHub API error: ${res.statusCode}`, releases: [] });
+        }
+      });
+    }).on('error', (err) => {
+      resolve({ success: false, error: 'Network error: ' + err.message, releases: [] });
     });
   });
 });
@@ -405,8 +608,11 @@ ipcMain.handle('download-and-install-update', async (event, { downloadUrl, versi
       }
     }
 
-    // Step 4: Save version
+    // Step 4: Save version & sync account
     saveInstalledVersion(installDir, versionTag, releaseName);
+    if (config.userProfile) {
+      syncUserAccountToGame(config.userProfile, installDir);
+    }
 
     mainWindow.webContents.send('install-status', { step: 'done', message: 'Installation complete!' });
     return { success: true };

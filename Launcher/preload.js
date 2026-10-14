@@ -6,14 +6,20 @@ contextBridge.exposeInMainWorld('launcherAPI', {
   maximize: () => ipcRenderer.send('window-maximize'),
   close: () => ipcRenderer.send('window-close'),
 
-  // Config
+  // Config & Path Management
   getConfig: () => ipcRenderer.invoke('get-config'),
   saveConfig: (cfg) => ipcRenderer.invoke('save-config', cfg),
   selectDirectory: () => ipcRenderer.invoke('select-directory'),
+  changeInstallDir: (newDir) => ipcRenderer.invoke('change-install-dir', newDir),
+
+  // User Profile / Registration
+  saveUserProfile: (profile) => ipcRenderer.invoke('save-user-profile', profile),
+  getUserProfile: () => ipcRenderer.invoke('get-user-profile'),
 
   // Status & Updates
   checkInstalledStatus: () => ipcRenderer.invoke('check-installed-status'),
   fetchLatestRelease: () => ipcRenderer.invoke('fetch-latest-release'),
+  fetchAllReleases: () => ipcRenderer.invoke('fetch-all-releases'),
   downloadAndInstallUpdate: (payload) => ipcRenderer.invoke('download-and-install-update', payload),
   installFromLocalBuild: () => ipcRenderer.invoke('install-from-local-build'),
 
