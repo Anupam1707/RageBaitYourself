@@ -33,6 +33,7 @@
       <li><a href="#levels">Chronicles</a></li>
       <li><a href="#features">Features</a></li>
       <li><a href="#downloads">Downloads</a></li>
+      <li><a href="#about-dev">Developer</a></li>
     </ul>
 
     <div class="nav-actions">
@@ -49,12 +50,15 @@
   <!-- Hero Section -->
   <main>
     <section class="hero">
-      <div class="hero-pill">
-        <span class="live-dot"></span>
-        <span id="live-release-tag">v0.2 Latest</span>
-        <span>•</span>
-        <span id="cloud-sync-status">Firebase Cloud Active</span>
-      </div>
+      <a id="live-release-link" href="https://github.com/Anupam1707/RageBaitYourself/releases/latest" target="_blank" rel="noopener" style="text-decoration: none;">
+        <div class="hero-pill">
+          <span class="live-dot"></span>
+          <span id="live-release-tag">v0.2 Latest</span>
+          <span>•</span>
+          <span id="cloud-sync-status">Firebase Cloud Active</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 4px; opacity: 0.7;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </div>
+      </a>
 
       <h1 class="hero-title">
         THE ULTIMATE TEST OF
@@ -435,6 +439,77 @@
             </div>
             <a id="dl-game-linux" href="https://github.com/Anupam1707/RageBaitYourself/releases/latest" class="btn btn-secondary">
               Download Game (Linux)
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Developer Section -->
+    <section class="section" id="about-dev">
+      <div class="section-header">
+        <span class="section-badge">Behind The Vision</span>
+        <h2 class="section-title">About The Developer</h2>
+        <p class="section-desc">The craft, engineering, and indie motivation behind RageBait Yourself.</p>
+      </div>
+
+      <div class="dev-card-wrapper">
+        <div class="dev-card">
+          <div class="dev-header">
+            <div class="dev-avatar-wrap">
+              <img id="dev-avatar" src="https://avatars.githubusercontent.com/u/96910096?v=4" alt="Anupam Kanoongo" class="dev-avatar">
+              <span class="dev-status-indicator" title="Actively Building"></span>
+            </div>
+            <div class="dev-meta">
+              <h3 class="dev-name" id="dev-name">Anupam Kanoongo</h3>
+              <a href="https://github.com/Anupam1707" target="_blank" rel="noopener" class="dev-handle" id="dev-handle">@Anupam1707</a>
+              <div class="dev-location">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span id="dev-location">Indore, MP</span>
+              </div>
+            </div>
+            <div class="dev-quick-stats">
+              <div class="dev-stat-box">
+                <span class="dev-stat-val" id="dev-repos">38</span>
+                <span class="dev-stat-lbl">Repos</span>
+              </div>
+              <div class="dev-stat-box">
+                <span class="dev-stat-val">100%</span>
+                <span class="dev-stat-lbl">Indie Dev</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dev-body">
+            <h4 class="dev-story-title">Crafting Pure Emotional Resilience</h4>
+            <p class="dev-narrative">
+              <strong>RageBait Yourself</strong> was conceived from a simple, provocative premise: <em>what happens when you strip modern games of safety nets, hand-holding, and checkpoints?</em> 
+              Designed as a true psychological and mechanical challenge, the game combines razor-sharp physics, trap deception, and an uncompromising level curve.
+            </p>
+            <p class="dev-narrative">
+              Beyond the gameplay, the entire software ecosystem was engineered from scratch: a custom cross-platform auto-updating desktop launcher built with Electron and Node.js, low-latency REST synchronization directly with Firebase Realtime Database for cross-device persistence, and native multi-architecture compilation for Apple Silicon, Intel x86_64, Windows, and Linux.
+            </p>
+
+            <div class="dev-tech-stack">
+              <span class="tech-tag">Unity 2022.3 LTS</span>
+              <span class="tech-tag">C# Physics</span>
+              <span class="tech-tag">Electron</span>
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">Firebase RTDB</span>
+              <span class="tech-tag">macOS Universal</span>
+              <span class="tech-tag">Linux AppImage</span>
+              <span class="tech-tag">Windows x64/x86</span>
+            </div>
+          </div>
+
+          <div class="dev-actions">
+            <a href="https://github.com/Anupam1707" target="_blank" rel="noopener" class="btn btn-rage" style="padding: 0.8rem 1.8rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              View GitHub Profile
+            </a>
+            <a href="https://github.com/Anupam1707/RageBaitYourself" target="_blank" rel="noopener" class="btn btn-secondary" style="padding: 0.8rem 1.8rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Star on GitHub
             </a>
           </div>
         </div>

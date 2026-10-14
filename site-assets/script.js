@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initNavbarScroll();
   fetchReleaseAssets();
+  fetchDeveloperProfile();
   pingCloudStatus();
 });
 
@@ -132,19 +133,29 @@ function initNavbarScroll() {
   });
 }
 
-// 5. GitHub API Live Asset Fetching
+// 5. GitHub API Live Asset Fetching & Dynamic Linking
 async function fetchReleaseAssets() {
   try {
     const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/releases/latest`);
     if (!res.ok) return;
     const release = await res.json();
 
+    // Dynamically link version tag to release URL
     const tagBadge = document.getElementById('live-release-tag');
+    const releaseLink = document.getElementById('live-release-link');
     if (tagBadge && release.tag_name) {
       tagBadge.textContent = `${release.tag_name} Latest`;
     }
+    if (releaseLink && release.html_url) {
+      releaseLink.href = release.html_url;
+      releaseLink.title = `View ${release.name || release.tag_name} on GitHub`;
+    }
 
     if (release.assets && release.assets.length > 0) {
+      let macAsset = null;
+      let winAsset = null;
+      let linuxAsset = null;
+
       // Map assets to matching card buttons
       release.assets.forEach(asset => {
         const name = asset.name.toLowerCase();
@@ -152,12 +163,16 @@ async function fetchReleaseAssets() {
 
         if (name.endsWith('.dmg')) {
           targetEl = document.getElementById('dl-mac-dmg');
+          macAsset = asset;
         } else if (name.endsWith('.pkg')) {
           targetEl = document.getElementById('dl-mac-pkg');
-        } else if (name.endsWith('.exe')) {
+          if (!macAsset) macAsset = asset;
+        } else if (name.endsWith('.exe') || (name.includes('win') && name.endsWith('.zip'))) {
           targetEl = document.getElementById('dl-win-exe');
+          winAsset = asset;
         } else if (name.endsWith('.appimage')) {
           targetEl = document.getElementById('dl-linux-appimage');
+          linuxAsset = asset;
         } else if (name.includes('macos.zip')) {
           targetEl = document.getElementById('dl-game-mac');
         } else if (name.includes('win-x64.zip')) {
@@ -173,13 +188,57 @@ async function fetchReleaseAssets() {
           if (sizeBadge) sizeBadge.textContent = `${mb} MB`;
         }
       });
+
+      // Update hero CTA button dynamically based on detected OS
+      const heroBtn = document.getElementById('hero-download-btn');
+      if (heroBtn) {
+        const targetTab = heroBtn.getAttribute('data-target-tab');
+        if (targetTab === 'mac' && macAsset) {
+          heroBtn.href = macAsset.browser_download_url;
+        } else if (targetTab === 'win' && winAsset) {
+          heroBtn.href = winAsset.browser_download_url;
+        } else if (targetTab === 'linux' && linuxAsset) {
+          heroBtn.href = linuxAsset.browser_download_url;
+        }
+      }
     }
   } catch (err) {
     console.warn('Could not fetch latest release from GitHub API:', err);
   }
 }
 
-// 6. Firebase RTDB Cloud Status Ping
+// 6. Fetch Developer Profile from GitHub
+async function fetchDeveloperProfile() {
+  try {
+    const res = await fetch(`https://api.github.com/users/${OWNER}`);
+    if (!res.ok) return;
+    const user = await res.json();
+
+    const avatar = document.getElementById('dev-avatar');
+    if (avatar && user.avatar_url) {
+      avatar.src = user.avatar_url;
+    }
+
+    const nameEl = document.getElementById('dev-name');
+    if (nameEl && user.name) {
+      nameEl.textContent = user.name;
+    }
+
+    const reposEl = document.getElementById('dev-repos');
+    if (reposEl && user.public_repos !== undefined) {
+      reposEl.textContent = user.public_repos;
+    }
+
+    const locEl = document.getElementById('dev-location');
+    if (locEl && user.location) {
+      locEl.textContent = user.location;
+    }
+  } catch (err) {
+    console.warn('Could not fetch GitHub user info:', err);
+  }
+}
+
+// 7. Firebase RTDB Cloud Status Ping
 async function pingCloudStatus() {
   try {
     const res = await fetch(`${FIREBASE_DB}/.json?shallow=true`, { method: 'HEAD' });
@@ -190,3 +249,4 @@ async function pingCloudStatus() {
     }
   } catch (_) {}
 }
+
