@@ -240,7 +240,15 @@ ipcMain.handle('fetch-latest-release', async () => {
             if (platform === 'darwin') {
               asset = release.assets.find(a => /mac|osx|universal/i.test(a.name) && a.name.endsWith('.zip'));
             } else if (platform === 'win32') {
-              asset = release.assets.find(a => /win|windows/i.test(a.name) && a.name.endsWith('.zip'));
+              const arch = process.arch;
+              if (arch === 'ia32') {
+                asset = release.assets.find(a => /ia32|x86/i.test(a.name) && a.name.endsWith('.zip')) ||
+                        release.assets.find(a => /win|windows/i.test(a.name) && a.name.endsWith('.zip'));
+              } else {
+                asset = release.assets.find(a => /win.*x64|win64|windows.*x64/i.test(a.name) && a.name.endsWith('.zip')) ||
+                        release.assets.find(a => /win|windows/i.test(a.name) && !/ia32|x86/i.test(a.name) && a.name.endsWith('.zip')) ||
+                        release.assets.find(a => /win|windows/i.test(a.name) && a.name.endsWith('.zip'));
+              }
             } else {
               asset = release.assets.find(a => /linux/i.test(a.name) && a.name.endsWith('.zip'));
             }
