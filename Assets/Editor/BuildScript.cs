@@ -29,13 +29,19 @@ public class BuildScript
 
         Debug.Log("🚀 Starting Automated Multi-Platform Build Pipeline...");
 
-        // 1. macOS Universal (Intel + Apple Silicon)
+        // 1. macOS Universal (Intel x86_64 + Apple Silicon arm64 combined)
+        try {
+            PlayerSettings.SetArchitecture(UnityEditor.Build.NamedBuildTarget.Standalone, 2);
+        } catch {}
         BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-0.1-macos-universal.app"), BuildTarget.StandaloneOSX);
 
-        // 2. Windows 64-bit
+        // 2. Windows 64-bit (x64)
         BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-0.1-win-x64", "RageBaitYourself.exe"), BuildTarget.StandaloneWindows64);
 
-        // 3. Linux 64-bit
+        // 3. Windows 32-bit (x86 / ia32 separate)
+        BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-0.1-win-x86", "RageBaitYourself.exe"), BuildTarget.StandaloneWindows);
+
+        // 4. Linux 64-bit (x86_64)
         BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-0.1-linux-x86_64", "RageBaitYourself.x86_64"), BuildTarget.StandaloneLinux64);
 
         Debug.Log("🎉 All platforms built successfully!");
