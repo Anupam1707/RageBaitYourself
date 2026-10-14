@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Cinzel+Decorative:wght@700;900&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Cinzel+Decorative:wght@700;900&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="app-container">
@@ -26,9 +26,14 @@
     <nav class="top-nav">
       <div class="nav-tabs">
         <button class="nav-tab active" data-tab="play">GAME</button>
-        <button class="nav-tab" data-tab="patchnotes">PATCH NOTES</button>
+        <button class="nav-tab" data-tab="patchnotes">PATCHES</button>
         <button class="nav-tab" data-tab="levels">LEVELS INTEL</button>
+        <button class="nav-tab" data-tab="settings">SETTINGS</button>
         <button class="nav-tab" data-tab="about">ABOUT DEV</button>
+      </div>
+      <div class="nav-user-badge" id="navUserBadge" title="Registered Player Profile">
+        <span class="user-dot"></span>
+        <span class="user-name-display" id="navUserName">CHALLENGER</span>
       </div>
     </nav>
 
@@ -49,46 +54,15 @@
         </div>
       </div>
 
-      <!-- Quick Level Reel -->
-      <section class="levels-reel">
-        <div class="reel-header">
-          <span class="reel-title">CHALLENGE TIERS</span>
-          <span class="reel-hint">All 6 authored challenges loaded</span>
-        </div>
-        <div class="reel-cards">
-          <div class="mini-card" style="background-image: url('../assets/lv1.png')">
-            <span class="level-tag">LV1</span>
-            <span class="level-name">Original Maze</span>
-          </div>
-          <div class="mini-card" style="background-image: url('../assets/lv2.png')">
-            <span class="level-tag">LV2</span>
-            <span class="level-name">Obstacle Gauntlet</span>
-          </div>
-          <div class="mini-card" style="background-image: url('../assets/lv3.png')">
-            <span class="level-tag">LV3</span>
-            <span class="level-name">Platform Peril</span>
-          </div>
-          <div class="mini-card" style="background-image: url('../assets/lv4.png')">
-            <span class="level-tag">LV4</span>
-            <span class="level-name">Relic Hunt</span>
-          </div>
-          <div class="mini-card" style="background-image: url('../assets/lv5.png')">
-            <span class="level-tag">LV5</span>
-            <span class="level-name">Escape Room</span>
-          </div>
-          <div class="mini-card" style="background-image: url('../assets/lv6.png')">
-            <span class="level-tag">LV6</span>
-            <span class="level-name">Target Arena</span>
-          </div>
-        </div>
-      </section>
-
       <!-- Bottom Action Dock -->
       <footer class="action-dock">
         <div class="dock-info">
           <div class="version-row">
             <span class="info-label">CLIENT STATUS:</span>
             <span class="info-value" id="gameClientStatus">Checking...</span>
+            <button class="refresh-pill-btn" id="btnHomeRefresh" title="Refresh client status and check for updates">
+              <span class="refresh-icon" id="homeRefreshIcon">⟳</span> REFRESH
+            </button>
           </div>
           <div class="version-meta">
             <span id="installedVersionText">Installed: None</span>
@@ -120,18 +94,20 @@
       </footer>
     </main>
 
-    <!-- Tab 2: Patch Notes -->
+    <!-- Tab 2: Patches History (Dates & Release Numbers) -->
     <div class="tab-content" id="tab-patchnotes">
       <div class="panel-container">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">LATEST PATCH NOTES</h2>
-            <div class="panel-subtitle" id="patchNotesMeta">Fetched from GitHub Releases</div>
+            <h2 class="panel-title">RELEASE CHRONICLES</h2>
+            <div class="panel-subtitle" id="patchNotesMeta">All official game deployments by version & date</div>
           </div>
-          <button class="secondary-btn" id="btnRefreshReleases">Refresh</button>
+          <button class="secondary-btn" id="btnRefreshReleases">
+            <span class="btn-spin-icon" id="refreshReleasesSpin">⟳</span> Refresh Releases
+          </button>
         </div>
-        <div class="notes-body" id="patchNotesContent">
-          <p class="placeholder-text">Loading release notes from repository...</p>
+        <div class="patches-timeline" id="patchesTimeline">
+          <div class="timeline-loading">Loading official releases...</div>
         </div>
       </div>
     </div>
@@ -212,7 +188,54 @@
       </div>
     </div>
 
-    <!-- Tab 4: About Dev -->
+    <!-- Tab 4: Settings -->
+    <div class="tab-content" id="tab-settings">
+      <div class="panel-container">
+        <h2 class="panel-title">SETTINGS & CONFIGURATION</h2>
+        <p class="panel-subtitle">Manage game install directory, player profile, and launcher preferences</p>
+
+        <div class="settings-grid">
+          <!-- Install Path Card -->
+          <div class="settings-card">
+            <h3 class="settings-card-title">📁 GAME INSTALLATION DIRECTORY</h3>
+            <p class="settings-card-desc">Location where RageBait Yourself binaries and assets are saved.</p>
+            <div class="path-input-group">
+              <input type="text" id="settingsInstallPath" class="settings-input" readonly />
+              <button class="primary-btn-sm" id="btnSettingsChangePath">Browse & Move...</button>
+            </div>
+            <p class="settings-hint">Changing location will safely move all your game files to the new folder automatically.</p>
+          </div>
+
+          <!-- Player Account Card -->
+          <div class="settings-card">
+            <h3 class="settings-card-title">👤 ACTIVE PLAYER PROFILE</h3>
+            <p class="settings-card-desc">Your in-game user account used for score, deaths, and progressive unlocks.</p>
+            <div class="profile-details-box">
+              <div class="profile-detail-row">
+                <span class="detail-label">Username:</span>
+                <span class="detail-value" id="settingsProfileUsername">Loading...</span>
+              </div>
+              <div class="profile-detail-row">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value" id="settingsProfileEmail">-</span>
+              </div>
+            </div>
+            <button class="secondary-btn" id="btnSettingsEditProfile">Edit Profile / Switch Account</button>
+          </div>
+
+          <!-- Preferences Card -->
+          <div class="settings-card">
+            <h3 class="settings-card-title">⚙️ CLIENT PREFERENCES</h3>
+            <label class="settings-toggle-row">
+              <input type="checkbox" id="settingsAutoCloseToggle" />
+              <span>Minimize launcher when game starts</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 5: About Dev -->
     <div class="tab-content" id="tab-about">
       <div class="panel-container">
         <div class="about-hero">
@@ -261,6 +284,57 @@
               <div class="tech-pill">Desktop Universal Build</div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 1: User Registration (Shown on launch if no profile exists) -->
+    <div class="modal-overlay" id="registrationModal" style="display: none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <img src="../assets/logo.png" class="modal-logo" alt="Logo" />
+          <h2 class="modal-title">CHALLENGER REGISTRATION</h2>
+          <p class="modal-subtitle">Create your player account. Your level unlocks, deaths, and scores will be stored in this profile.</p>
+        </div>
+        <form id="registrationForm" class="modal-form">
+          <div class="form-group">
+            <label for="regUsername">USERNAME</label>
+            <input type="text" id="regUsername" class="modal-input" placeholder="e.g. RageChampion" required autocomplete="username" />
+          </div>
+          <div class="form-group">
+            <label for="regEmail">EMAIL ADDRESS</label>
+            <input type="email" id="regEmail" class="modal-input" placeholder="e.g. player@example.com" required autocomplete="email" />
+          </div>
+          <div class="form-group">
+            <label for="regPassword">PASSWORD</label>
+            <input type="password" id="regPassword" class="modal-input" placeholder="Enter secure password" required autocomplete="new-password" />
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="cta-button modal-submit-btn">
+              <span>INITIALIZE PROFILE & ENTER</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal 2: Pre-Install Directory Selector -->
+    <div class="modal-overlay" id="installLocationModal" style="display: none;">
+      <div class="modal-card modal-card-sm">
+        <div class="modal-header">
+          <h2 class="modal-title">CONFIRM INSTALL LOCATION</h2>
+          <p class="modal-subtitle">Select the destination directory where the game should be installed:</p>
+        </div>
+        <div class="modal-body">
+          <div class="path-input-group">
+            <input type="text" id="modalInstallPathInput" class="settings-input" readonly />
+            <button class="primary-btn-sm" id="btnModalBrowsePath">Browse...</button>
+          </div>
+          <p class="settings-hint">Requires ~250 MB free disk space. Future updates will download here automatically.</p>
+        </div>
+        <div class="modal-actions-row">
+          <button class="secondary-btn" id="btnCancelInstallModal">Cancel</button>
+          <button class="cta-button-sm" id="btnConfirmInstallModal">CONFIRM & INSTALL</button>
         </div>
       </div>
     </div>

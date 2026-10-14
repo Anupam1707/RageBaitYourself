@@ -6,6 +6,8 @@ using UnityEngine;
 public class UserAccount
 {
     public string username = "";
+    public string email = "";
+    public string password = "";
     public int maxUnlockedLevel = 1;
     public int totalScore = 0;
     public int totalDeaths = 0;
@@ -15,9 +17,11 @@ public class UserAccount
 
     public UserAccount() { }
 
-    public UserAccount(string name)
+    public UserAccount(string name, string userEmail = "", string pwd = "")
     {
         username = name;
+        email = userEmail;
+        password = pwd;
         maxUnlockedLevel = 1;
         totalScore = 0;
         totalDeaths = 0;

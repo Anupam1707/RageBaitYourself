@@ -46,6 +46,7 @@ public class BuildScript
             PlayerSettings.SetArchitecture(UnityEditor.Build.NamedBuildTarget.Standalone, 2);
         } catch {}
         BuildForPlatform(scenes, Path.Combine(outputDir, "RageBait Yourself.app"), BuildTarget.StandaloneOSX);
+        EmbedMacIcon(rootDir, outputDir);
 
         // 2. Windows 64-bit (x64)
         BuildForPlatform(scenes, Path.Combine(outputDir, "RageBaitYourself-win-x64", "RageBaitYourself.exe"), BuildTarget.StandaloneWindows64);
@@ -66,6 +67,18 @@ public class BuildScript
         string rootDir = Directory.GetCurrentDirectory();
         string outputDir = Path.Combine(rootDir, "FinalBuilds");
         BuildForPlatform(GetScenes(), Path.Combine(outputDir, "RageBait Yourself.app"), BuildTarget.StandaloneOSX);
+        EmbedMacIcon(rootDir, outputDir);
+    }
+
+    private static void EmbedMacIcon(string rootDir, string outputDir)
+    {
+        string iconSrc = Path.Combine(rootDir, "Launcher", "assets", "icon.icns");
+        string iconDest = Path.Combine(outputDir, "RageBait Yourself.app", "Contents", "Resources", "PlayerIcon.icns");
+        if (File.Exists(iconSrc) && Directory.Exists(Path.GetDirectoryName(iconDest)))
+        {
+            File.Copy(iconSrc, iconDest, true);
+            Debug.Log("🎨 Embedded official game icon into PlayerIcon.icns!");
+        }
     }
 
     private static void BuildForPlatform(string[] scenes, string outputPath, BuildTarget target)
