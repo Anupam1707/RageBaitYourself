@@ -1,0 +1,46 @@
+name: Release Game & Launcher
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Package and Release Game Builds
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: Launcher/package.json
+
+      - name: Install Launcher Dependencies
+        working-directory: Launcher
+        run: npm ci
+
+      - name: Package FinalBuilds into Zips
+        working-directory: Launcher
+        run: npm run package-game
+
+      - name: Create GitHub Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: RageBait Yourself ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            Launcher/dist-game-releases/RageBaitYourself-macos.zip
+            Launcher/dist-game-releases/RageBaitYourself-win-x64.zip
+            Launcher/dist-game-releases/RageBaitYourself-linux-x86_64.zip
