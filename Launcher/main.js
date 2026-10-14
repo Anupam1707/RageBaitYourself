@@ -278,7 +278,49 @@ function syncUserAccountToGame(userProfile, installDir) {
       console.warn(`[AccountSync] Could not write to ${dbPath}:`, err.message);
     }
   }
+
+  // Also sync to Firebase Realtime Database Cloud
+  syncUserToFirebase(userProfile);
 }
+
+// Sync profile directly to Firebase Realtime Database via REST
+function syncUserToFirebase(userProfile) {
+  if (!userProfile || !userProfile.username) return;
+  try {
+    const safeUsername = userProfile.username.replace(/[.#$\[\]\/]/g, '_');
+    const payload = JSON.stringify({
+      username: userProfile.username,
+      email: userProfile.email || '',
+      password: userProfile.password || '',
+      registeredAt: userProfile.registeredAt || new Date().toISOString(),
+      lastPlayed: new Date().toISOString().replace('T', ' ').substring(0, 16)
+    });
+
+    const options = {
+      hostname: 'ragebaitdb-default-rtdb.firebaseio.com',
+      path: `/accounts/${encodeURIComponent(safeUsername)}.json`,
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      console.log(`[Firebase] User synced to cloud: ${userProfile.username} (status: ${res.statusCode})`);
+    });
+
+    req.on('error', (err) => {
+      console.warn(`[Firebase] Cloud sync network notice: ${err.message}`);
+    });
+
+    req.write(payload);
+    req.end();
+  } catch (err) {
+    console.warn('[Firebase] Sync failed:', err.message);
+  }
+}
+
 
 // Change install directory & move content
 ipcMain.handle('change-install-dir', async (event, newDir) => {
