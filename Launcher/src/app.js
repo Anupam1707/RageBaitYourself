@@ -6,10 +6,6 @@ let isBusy = false;
 let isGameRunning = false;
 
 // DOM Elements
-const btnMinimize = document.getElementById('btnMinimize');
-const btnMaximize = document.getElementById('btnMaximize');
-const btnClose = document.getElementById('btnClose');
-
 const navTabs = document.querySelectorAll('.nav-tab');
 const tabContents = document.querySelectorAll('.tab-content');
 
@@ -30,11 +26,6 @@ const patchNotesMeta = document.getElementById('patchNotesMeta');
 const patchNotesContent = document.getElementById('patchNotesContent');
 const btnRefreshReleases = document.getElementById('btnRefreshReleases');
 const toastNotice = document.getElementById('toastNotice');
-
-// Window Controls
-btnMinimize.addEventListener('click', () => window.launcherAPI.minimize());
-btnMaximize.addEventListener('click', () => window.launcherAPI.maximize());
-btnClose.addEventListener('click', () => window.launcherAPI.close());
 
 // Tab Navigation
 navTabs.forEach(tab => {
