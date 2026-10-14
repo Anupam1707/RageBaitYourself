@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RageBait Launcher</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Cinzel+Decorative:wght@700;900&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Window Titlebar -->
+    <header class="titlebar">
+      <div class="drag-region">
+        <div class="app-branding">
+          <img src="../assets/logo.png" class="app-logo-badge" alt="Logo" />
+          <span class="app-title">RAGEBAIT <span class="highlight">YOURSELF</span></span>
+          <span class="version-chip" id="launcherVersionChip">LAUNCHER v1.0</span>
+        </div>
+      </div>
+      <div class="window-controls">
+        <button id="btnMinimize" class="win-btn" title="Minimize">─</button>
+        <button id="btnMaximize" class="win-btn" title="Maximize">□</button>
+        <button id="btnClose" class="win-btn win-btn-close" title="Close">✕</button>
+      </div>
+    </header>
+
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="play">GAME</button>
+        <button class="nav-tab" data-tab="patchnotes">PATCH NOTES</button>
+        <button class="nav-tab" data-tab="levels">LEVELS INTEL</button>
+        <button class="nav-tab" data-tab="about">ABOUT DEV</button>
+        <button class="nav-tab" data-tab="settings">SETTINGS</button>
+      </div>
+      <div class="system-status">
+        <span class="status-dot online" id="statusDot"></span>
+        <span class="status-text" id="statusText">Checking GitHub...</span>
+      </div>
+    </nav>
+
+    <!-- Tab 1: Main Game View -->
+    <main class="tab-content active" id="tab-play">
+      <div class="hero-backdrop">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <div class="hero-brand-row">
+            <img src="../assets/logo.png" class="hero-logo-img" alt="RageBait Yourself!" />
+            <div class="hero-badge">RAGE-INDUCING 3D ACTION PLATFORMER</div>
+          </div>
+          <h1 class="hero-title">CONQUER <span class="glitch-text" data-text="THE GAUNTLET">THE GAUNTLET</span></h1>
+          <p class="hero-subtitle">
+            6 Authored stages of ruthless traps, deceptive platforms, and precision challenges.
+            One-time installer keeps your client automatically up to date for every patch.
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Level Reel -->
+      <section class="levels-reel">
+        <div class="reel-header">
+          <span class="reel-title">CHALLENGE TIERS</span>
+          <span class="reel-hint">All 6 authored challenges loaded</span>
+        </div>
+        <div class="reel-cards">
+          <div class="mini-card" style="background-image: url('../assets/lv1.png')">
+            <span class="level-tag">LV1</span>
+            <span class="level-name">Original Maze</span>
+          </div>
+          <div class="mini-card" style="background-image: url('../assets/lv2.png')">
+            <span class="level-tag">LV2</span>
+            <span class="level-name">Obstacle Gauntlet</span>
+          </div>
+          <div class="mini-card" style="background-image: url('../assets/lv3.png')">
+            <span class="level-tag">LV3</span>
+            <span class="level-name">Platform Peril</span>
+          </div>
+          <div class="mini-card" style="background-image: url('../assets/lv4.png')">
+            <span class="level-tag">LV4</span>
+            <span class="level-name">Relic Hunt</span>
+          </div>
+          <div class="mini-card" style="background-image: url('../assets/lv5.png')">
+            <span class="level-tag">LV5</span>
+            <span class="level-name">Escape Room</span>
+          </div>
+          <div class="mini-card" style="background-image: url('../assets/lv6.png')">
+            <span class="level-tag">LV6</span>
+            <span class="level-name">Target Arena</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom Action Dock -->
+      <footer class="action-dock">
+        <div class="dock-info">
+          <div class="version-row">
+            <span class="info-label">CLIENT STATUS:</span>
+            <span class="info-value" id="gameClientStatus">Checking...</span>
+          </div>
+          <div class="version-meta">
+            <span id="installedVersionText">Installed: None</span>
+            <span class="meta-separator">•</span>
+            <span id="latestVersionText">Latest: Checking...</span>
+            <span class="meta-separator">•</span>
+            <button class="text-link-btn" id="btnOpenGameDir">Open Game Folder</button>
+          </div>
+        </div>
+
+        <!-- Download & Install Progress Bar (Hidden by default) -->
+        <div class="progress-container" id="progressContainer" style="display: none;">
+          <div class="progress-labels">
+            <span id="progressStepText">Downloading update...</span>
+            <span id="progressStatsText">0 MB / 0 MB (0 MB/s)</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Main Action CTA Button -->
+        <div class="dock-actions">
+          <button class="cta-button" id="btnMainAction" disabled>
+            <span class="btn-icon">⚡</span>
+            <span class="btn-text" id="btnMainActionText">CHECKING...</span>
+          </button>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Tab 2: Patch Notes -->
+    <div class="tab-content" id="tab-patchnotes">
+      <div class="panel-container">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">LATEST PATCH NOTES</h2>
+            <div class="panel-subtitle" id="patchNotesMeta">Fetched from GitHub Releases</div>
+          </div>
+          <button class="secondary-btn" id="btnRefreshReleases">Refresh</button>
+        </div>
+        <div class="notes-body" id="patchNotesContent">
+          <p class="placeholder-text">Loading release notes from repository...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Levels Intel -->
+    <div class="tab-content" id="tab-levels">
+      <div class="panel-container">
+        <h2 class="panel-title">TACTICAL LEVEL DOSSIER</h2>
+        <p class="panel-subtitle">Controls & hazard briefings for all 6 active game stages</p>
+        
+        <div class="levels-grid">
+          <div class="intel-card">
+            <div class="intel-img" style="background-image: url('../assets/lv1.png')">
+              <span class="intel-badge">LV 1</span>
+            </div>
+            <div class="intel-info">
+              <h3>The Original Maze</h3>
+              <p>Navigate the labyrinth, collect coins & treasure, and locate the locked exit checkpoint.</p>
+              <div class="intel-controls">WASD: Move • Mouse: Look</div>
+            </div>
+          </div>
+
+          <div class="intel-card">
+            <div class="intel-img" style="background-image: url('../assets/lv2.png')">
+              <span class="intel-badge">LV 2</span>
+            </div>
+            <div class="intel-info">
+              <h3>Obstacle Gauntlet</h3>
+              <p>Horizontal sweepers, spinning hazards, moving platforms, and a troll finish line trigger.</p>
+              <div class="intel-controls">Space: Jump • 3 Revives per level</div>
+            </div>
+          </div>
+
+          <div class="intel-card">
+            <div class="intel-img" style="background-image: url('../assets/lv3.png')">
+              <span class="intel-badge">LV 3</span>
+            </div>
+            <div class="intel-info">
+              <h3>Platform Peril</h3>
+              <p>Deceptive platforms. The green safe-looking tile might deceive you; watch your step!</p>
+              <div class="intel-controls">Space: Jump • Precision Timing</div>
+            </div>
+          </div>
+
+          <div class="intel-card">
+            <div class="intel-img" style="background-image: url('../assets/lv4.png')">
+              <span class="intel-badge">LV 4</span>
+            </div>
+            <div class="intel-info">
+              <h3>Relic Hunt</h3>
+              <p>Track down 5 genuine relics. Beware of vanishing illusions and relocated artifacts.</p>
+              <div class="intel-controls">E / Left Click: Interact</div>
+            </div>
+          </div>
+
+          <div class="intel-card">
+            <div class="intel-img" style="background-image: url('../assets/lv5.png')">
+              <span class="intel-badge">LV 5</span>
+            </div>
+            <div class="intel-info">
+              <h3>Escape Room</h3>
+              <p>Solve the locked room sequence: Key 1, drawer, blue lever, Key 3, and secret door.</p>
+              <div class="intel-controls">E / Left Click: Pick up / Use</div>
+            </div>
+          </div>
+
+          <div class="intel-card">
+            <div class="intel-img" style="background-image: url('../assets/lv6.png')">
+              <span class="intel-badge">LV 6</span>
+            </div>
+            <div class="intel-info">
+              <h3>Target Arena Finale</h3>
+              <p>5 Rounds of static, evasive, and deceptive targets. Only one valid target in round 5!</p>
+              <div class="intel-controls">Left Click: Fire • Crosshair Aim</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: About Dev -->
+    <div class="tab-content" id="tab-about">
+      <div class="panel-container">
+        <div class="about-hero">
+          <img src="../assets/about-plaque.png" class="about-plaque-img" alt="About" />
+        </div>
+
+        <div class="about-grid">
+          <!-- Developer Profile Card -->
+          <div class="dev-card">
+            <div class="dev-card-header">
+              <div class="dev-avatar">AK</div>
+              <div>
+                <h3 class="dev-name">ANUPAM KANOONGO</h3>
+                <span class="dev-role">SOLO DEVELOPER & CREATOR</span>
+              </div>
+            </div>
+            
+            <p class="dev-bio">
+              "This is a personal game project built from a love of atmospheric environments, playful traps, and games that make failure feel like part of the story."
+            </p>
+
+            <blockquote class="dev-quote">
+              “If a path looks too safe, it probably has a punchline.”
+            </blockquote>
+
+            <div class="dev-actions">
+              <button type="button" class="secondary-btn" id="btnDevGithub">Visit GitHub Profile</button>
+              <button type="button" class="secondary-btn" id="btnDevIssues">Report Bug / Feedback</button>
+            </div>
+          </div>
+
+          <!-- Project & Engine Intel -->
+          <div class="project-intel-card">
+            <h4 class="card-subtitle">ABOUT THE GAME</h4>
+            <p class="project-description">
+              <strong>RageBait Yourself</strong> is a first-person challenge game about movement, misdirection, and the small decisions that turn "easy" into "one more try".
+            </p>
+            <p class="project-description">
+              Six stages progress from a dark forest maze and obstacle gauntlet to platforming, relic hunting, an escape room, and a target finale. The world is crafted to feel tempting, readable, and deliberately untrustworthy.
+            </p>
+
+            <div class="tech-stack-row">
+              <div class="tech-pill">Unity 2022.3.62f3</div>
+              <div class="tech-pill">Universal Render Pipeline</div>
+              <div class="tech-pill">TextMesh Pro (Cinzel)</div>
+              <div class="tech-pill">Desktop Universal Build</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 5: Settings -->
+    <div class="tab-content" id="tab-settings">
+      <div class="panel-container">
+        <h2 class="panel-title">LAUNCHER & UPDATER SETTINGS</h2>
+        <p class="panel-subtitle">Configure update sources, install directories, and execution options</p>
+
+        <form class="settings-form" id="settingsForm">
+          <div class="setting-group">
+            <label class="setting-label">GitHub Repository (Update Channel)</label>
+            <div class="input-inline">
+              <input type="text" id="cfgGithubOwner" class="text-input" placeholder="Owner (e.g. anupamkanoongo)" required>
+              <span class="slash">/</span>
+              <input type="text" id="cfgGithubRepo" class="text-input" placeholder="Repo (e.g. RageBaitYourself)" required>
+            </div>
+            <span class="setting-help">The launcher queries GitHub Releases from this repo to discover and download new versions.</span>
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">Game Installation Directory</label>
+            <div class="input-inline">
+              <input type="text" id="cfgInstallDir" class="text-input full-width" readonly>
+              <button type="button" class="secondary-btn" id="btnBrowseInstallDir">Browse...</button>
+            </div>
+            <span class="setting-help">Where game binaries, updates, and assets are unpacked and executed.</span>
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">Launcher Behavior</label>
+            <div class="checkbox-row">
+              <input type="checkbox" id="cfgAutoClose">
+              <label for="cfgAutoClose">Auto-minimize launcher while the game is running</label>
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button type="submit" class="save-btn">Save Settings</button>
+            <button type="button" class="secondary-btn" id="btnTestLocalBuild">Install from Local FinalBuilds (Offline Test)</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Alert / Toast Banner -->
+    <div class="toast-notice" id="toastNotice"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
