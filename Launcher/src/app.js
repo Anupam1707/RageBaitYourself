@@ -342,13 +342,13 @@ const btnDevIssues = document.getElementById('btnDevIssues');
 
 if (btnDevGithub) {
   btnDevGithub.addEventListener('click', () => {
-    window.launcherAPI.openExternal(`https://github.com/${currentConfig?.githubOwner || 'anupamkanoongo'}`);
+    window.launcherAPI.openExternal(`https://github.com/${currentConfig?.githubOwner || 'Anupam1707'}`);
   });
 }
 
 if (btnDevIssues) {
   btnDevIssues.addEventListener('click', () => {
-    window.launcherAPI.openExternal(`https://github.com/${currentConfig?.githubOwner || 'anupamkanoongo'}/${currentConfig?.githubRepo || 'RageBaitYourself'}/issues`);
+    window.launcherAPI.openExternal(`https://github.com/${currentConfig?.githubOwner || 'Anupam1707'}/${currentConfig?.githubRepo || 'RageBaitYourself'}/issues`);
   });
 }
 

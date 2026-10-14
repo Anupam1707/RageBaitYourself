@@ -23,7 +23,7 @@ function getConfigPath() {
 function loadConfig() {
   const cfgPath = getConfigPath();
   const defaultConfig = {
-    githubOwner: 'anupamkanoongo',
+    githubOwner: 'Anupam1707',
     githubRepo: 'RageBaitYourself',
     installDir: getDefaultInstallDir(),
     autoCloseLauncher: false,
