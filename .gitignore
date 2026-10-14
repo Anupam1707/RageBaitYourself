@@ -45,6 +45,8 @@ ExportedObj/
 # Unity Crash Handler / Logs
 sysinfo.txt
 *.stackdump
+*.log
+unity_build.log
 
 # ==========================================
 # Electron / Launcher Ignores
