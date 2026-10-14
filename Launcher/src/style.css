@@ -60,14 +60,13 @@ body {
 
 /* Titlebar */
 .titlebar {
-  height: 42px;
-  background: rgba(10, 11, 16, 0.9);
+  height: 44px;
+  background: rgba(10, 11, 16, 0.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-left: 16px;
+  padding: 0 24px;
   z-index: 100;
 }
 
@@ -82,8 +81,7 @@ body {
 .app-branding {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding-left: 72px;
+  gap: 12px;
 }
 
 .app-logo-badge {
@@ -91,6 +89,7 @@ body {
   height: 24px;
   object-fit: contain;
   filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.7));
+  display: block;
 }
 
 .hero-brand-row {
@@ -138,25 +137,26 @@ body {
 
 /* Navigation Bar */
 .top-nav {
-  height: 52px;
+  height: 50px;
   background: rgba(14, 16, 24, 0.7);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0 24px;
   z-index: 90;
 }
 
 .nav-tabs {
   display: flex;
-  gap: 8px;
+  gap: 4px;
+  margin-left: -12px;
 }
 
 .nav-tab {
   background: transparent;
   border: none;
+  outline: none;
   color: var(--text-muted);
   font-family: var(--font-display);
   font-size: 12px;
@@ -167,6 +167,16 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-tab:focus,
+.nav-tab:focus-visible,
+button:focus,
+button:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .nav-tab:hover {
@@ -182,7 +192,7 @@ body {
 .nav-tab.active::after {
   content: '';
   position: absolute;
-  bottom: -9px;
+  bottom: -8px;
   left: 16px;
   right: 16px;
   height: 2px;
