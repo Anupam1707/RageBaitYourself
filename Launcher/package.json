@@ -44,9 +44,18 @@
     "mac": {
       "category": "public.app-category.games",
       "target": [
-        "dmg",
-        "pkg",
-        "zip"
+        {
+          "target": "dmg",
+          "arch": ["universal"]
+        },
+        {
+          "target": "pkg",
+          "arch": ["universal"]
+        },
+        {
+          "target": "zip",
+          "arch": ["universal"]
+        }
       ],
       "icon": "assets/icon.icns",
       "identity": null,
@@ -71,10 +80,12 @@
     },
     "win": {
       "target": [
-        "nsis",
-        "portable"
+        {
+          "target": "nsis",
+          "arch": ["x64", "ia32"]
+        }
       ],
-      "icon": "assets/icon.ico"
+      "icon": "assets/icon.png"
     },
     "nsis": {
       "oneClick": false,
