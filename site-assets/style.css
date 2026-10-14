@@ -893,6 +893,95 @@ body {
   line-height: 1.6;
 }
 
+/* Minimalist Developer Section */
+.dev-minimal-wrapper {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.dev-minimal-card {
+  background: linear-gradient(180deg, rgba(16, 19, 30, 0.94) 0%, rgba(9, 11, 18, 0.98) 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 2.2rem 2.5rem;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.8), 0 0 20px rgba(229, 185, 88, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  transition: all var(--transition-fast);
+}
+
+.dev-minimal-card:hover {
+  border-color: var(--game-gold);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.9), 0 0 30px rgba(229, 185, 88, 0.25);
+  transform: translateY(-3px);
+}
+
+.dev-minimal-top {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.dev-minimal-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--game-gold);
+  box-shadow: 0 0 16px var(--game-gold-glow);
+}
+
+.dev-minimal-info h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+
+.dev-minimal-info a {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--game-gold);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.dev-minimal-info a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.dev-minimal-bio {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.dev-minimal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dev-tag {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  background: rgba(229, 185, 88, 0.08);
+  border: 1px solid rgba(229, 185, 88, 0.25);
+  color: var(--game-gold);
+}
+
+.dev-minimal-btns {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+
 /* Footer - Game Stone Style */
 .site-footer {
   border-top: 1.5px solid var(--border-gold);
