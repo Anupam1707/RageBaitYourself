@@ -373,6 +373,16 @@ ipcMain.handle('download-and-install-update', async (event, { downloadUrl, versi
     // Step 2: Extracting
     mainWindow.webContents.send('install-status', { step: 'extracting', message: 'Extracting update files...' });
     
+    // Clean up any legacy -0.1- folders or files so old versions don't linger
+    try {
+      const existing = fs.readdirSync(installDir);
+      for (const f of existing) {
+        if (/RageBaitYourself-0\.1/i.test(f)) {
+          fs.rmSync(path.join(installDir, f), { recursive: true, force: true });
+        }
+      }
+    } catch (_) {}
+
     const zip = new AdmZip(tempZipPath);
     zip.extractAllTo(installDir, true);
 
