@@ -10,7 +10,8 @@
     "dist:mac": "electron-builder --mac",
     "dist:win": "electron-builder --win",
     "dist:linux": "electron-builder --linux",
-    "package-game": "node scripts/package-game.js"
+    "package-game": "node scripts/package-game.js",
+    "release-game": "node scripts/publish-release.js"
   },
   "keywords": [
     "game-launcher",
