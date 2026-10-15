@@ -45,9 +45,12 @@ else
   echo "🌍 Mode: Building all platforms (macOS Universal, Windows x64, Windows ia32, Linux x64)..."
 fi
 
-# 3. Trigger Headless Unity Batchmode Compilation
+# 3. Trigger Headless Unity Batchmode Compilation (run inside Unity folder so no stray files touch this repo)
 echo "⚙️ Compiling game binaries via Unity batchmode..."
-"$UNITY_BIN" -batchmode -quit -projectPath "$UNITY_PROJECT_DIR" -executeMethod "$METHOD" -logFile "$REPO_DIR/unity_build.log"
+(cd "$UNITY_PROJECT_DIR" && "$UNITY_BIN" -batchmode -quit -projectPath "$UNITY_PROJECT_DIR" -executeMethod "$METHOD" -logFile "$UNITY_PROJECT_DIR/unity_build.log")
+
+# Safeguard: Remove any stray Unity stubs if created
+rm -rf "$REPO_DIR/ProjectSettings" "$REPO_DIR/Assets" "$REPO_DIR/Library" "$REPO_DIR/Logs" "$REPO_DIR/UserSettings" "$REPO_DIR/unity_build.log" 2>/dev/null || true
 
 echo "✅ Unity compilation successful!"
 
