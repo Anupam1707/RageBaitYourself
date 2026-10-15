@@ -427,28 +427,31 @@ ipcMain.handle('fetch-latest-release', async () => {
           try {
             const release = JSON.parse(data);
             
-            // Find platform-specific asset
+            // Find platform-specific game asset (Strictly exclude Launcher installer archives!)
             const platform = process.platform;
+            const gameAssets = release.assets.filter(a => !/launcher/i.test(a.name) && a.name.endsWith('.zip'));
             let asset = null;
+
             if (platform === 'darwin') {
-              asset = release.assets.find(a => /mac|osx|universal/i.test(a.name) && a.name.endsWith('.zip'));
+              asset = gameAssets.find(a => /mac|osx|universal/i.test(a.name)) ||
+                      gameAssets.find(a => a.name.endsWith('.zip'));
             } else if (platform === 'win32') {
               const arch = process.arch;
               if (arch === 'ia32') {
-                asset = release.assets.find(a => /ia32|x86/i.test(a.name) && a.name.endsWith('.zip')) ||
-                        release.assets.find(a => /win|windows/i.test(a.name) && a.name.endsWith('.zip'));
+                asset = gameAssets.find(a => /ia32|x86/i.test(a.name)) ||
+                        gameAssets.find(a => /win|windows/i.test(a.name));
               } else {
-                asset = release.assets.find(a => /win.*x64|win64|windows.*x64/i.test(a.name) && a.name.endsWith('.zip')) ||
-                        release.assets.find(a => /win|windows/i.test(a.name) && !/ia32|x86/i.test(a.name) && a.name.endsWith('.zip')) ||
-                        release.assets.find(a => /win|windows/i.test(a.name) && a.name.endsWith('.zip'));
+                asset = gameAssets.find(a => /win.*x64|win64|windows.*x64/i.test(a.name)) ||
+                        gameAssets.find(a => /win|windows/i.test(a.name) && !/ia32|x86/i.test(a.name)) ||
+                        gameAssets.find(a => /win|windows/i.test(a.name));
               }
             } else {
-              asset = release.assets.find(a => /linux/i.test(a.name) && a.name.endsWith('.zip'));
+              asset = gameAssets.find(a => /linux/i.test(a.name));
             }
 
-            // Fallback to any zip if specific not matched
-            if (!asset && release.assets && release.assets.length > 0) {
-              asset = release.assets.find(a => a.name.endsWith('.zip')) || release.assets[0];
+            // Fallback to any game zip if specific not matched
+            if (!asset && gameAssets.length > 0) {
+              asset = gameAssets[0];
             }
 
             resolve({
