@@ -157,7 +157,7 @@ async function main() {
     // 2. Launcher Installers from Launcher/dist
     const launcherDistDir = path.resolve(__dirname, '../dist');
     if (fs.existsSync(launcherDistDir)) {
-      const allowedExts = ['.dmg', '.pkg', '.AppImage', '.tar.gz', '.zip'];
+      const allowedExts = ['.dmg', '.pkg', '.AppImage', '.tar.gz', '.exe', '.msi'];
       const launcherFiles = fs.readdirSync(launcherDistDir).filter(f => {
         const lower = f.toLowerCase();
         if (lower.endsWith('.blockmap') || lower.endsWith('.yml') || lower.endsWith('.yaml') || lower.endsWith('.plist')) {
